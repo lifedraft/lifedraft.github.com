@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-    <title>index</title>
+    <title>lifedraft.github.com</title>
     <style type="text/css" media="screen">
       * {
         padding: 0;
@@ -133,15 +133,18 @@
       var username = prompt("Please enter your Github username") || "lifedraft";
       var projects = jQuery("#projects");
       var headline = jQuery("h1");
-      
       headline.html(username+"<span>´</span>s repositories are loading");
+
+      
       jQuery.getJSON("http://github.com/api/v2/json/repos/show/"+username+"?callback=?", function(repositories) {
+        
         headline.html(username+"<span>´</span>s Issues <strong>(0)</strong>");
         var issues_number_element = headline.find("strong");
         var issues_number = 0;
         headline.removeClass("loading");
         
         jQuery.each(repositories.repositories, function(i, repository) {
+          
           var repository_name = repository.name;
           
           if(repository_name.indexOf(".") == -1) {
@@ -149,8 +152,6 @@
             var project = jQuery('<div class="project"><h2 class="loading"><a target="_blank" href='+'http://github.com/' + username+"/"+ repository_name+'>'+repository_name+'</a></h2></div>');
             projects.append(project);
           
-          
-
             jQuery.getJSON("http://github.com/api/v2/json/issues/list/"+username+"/"+repository_name+"/open?callback=?", function(issues) {
               if(issues.issues.length) {
               
@@ -161,14 +162,18 @@
                 project.append("<ol>"+issuesOl.join('')+"</ol>");
                 issues_number += (issues.issues.length);
                 issues_number_element.text("("+issues_number+")");
+                document.title = ("lifedraft.github.com: "+username+"´s Issues ("+issues_number+")");
               } else {
                 project.append("<p>You are lucky, no issues!</p>");
               }
             
               project.find("h2").removeClass("loading");
             });
+          
           }
+          
         });
+      
       });
     </script>
   </body>
